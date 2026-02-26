@@ -4,9 +4,6 @@
  * Handles dark/light mode switching with localStorage persistence
  * and prevents flash of wrong theme on page load.
  */
-
-// Check if this is running during build vs client
-const isServer = import.meta.env.SSR;
 ---
 
 <script>
@@ -27,21 +24,19 @@ const isServer = import.meta.env.SSR;
   function setTheme(theme: Theme): void {
     localStorage.setItem('theme', theme);
     document.documentElement.dataset.theme = theme;
-    window.dispatchEvent(new CustomEvent('theme-change', { detail: { theme } }));
   }
 
   // Initialize theme on page load
   const theme = getTheme();
   setTheme(theme);
-</script>
 
-<script define:vars={{ setTheme }}>
+  // Setup toggle button
   function init() {
     const toggle = document.getElementById('theme-toggle');
     if (!toggle) return;
 
     toggle.addEventListener('click', () => {
-      const current = document.documentElement.dataset.theme as 'light' | 'dark';
+      const current = document.documentElement.dataset.theme;
       const next = current === 'dark' ? 'light' : 'dark';
       setTheme(next);
     });

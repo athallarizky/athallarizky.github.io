@@ -1,10 +1,8 @@
 import { defineCollection, z } from 'astro:content';
-import { glob } from 'astro/loaders';
 
 // Blog posts collection
 const blog = defineCollection({
-  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/blog' }),
-  // Type-safe frontmatter
+  // Type-safe frontmatter schema
   schema: z.object({
     title: z.string().max(100),
     description: z.string().max(200),

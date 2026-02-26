@@ -45,7 +45,20 @@ const twitterCard = image.includes('twitter:') ? 'summary_large_image' : 'summar
 
 <!-- Structured Data -->
 {pageType === 'article' && (
-  <script type="application/ld+json">
+  <script type="application/ld+json" set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: title,
+    description: description,
+    image: ogImage,
+    url: canonicalUrl,
+    author: {
+      '@type': 'Person',
+      name: 'Athallari Zky',
+      url: 'https://github.com/athallarizky',
+    },
+  })} />
+)}
     {{
       '@context': 'https://schema.org',
       '@type': 'BlogPosting',

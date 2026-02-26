@@ -1,5 +1,4 @@
 import { defineConfig } from 'astro/config';
-import sitemap from '@astrojs/sitemap';
 import tailwind from '@astrojs/tailwind';
 
 // ==============================================
@@ -26,7 +25,6 @@ export default defineConfig({
   base: IS_ROOT_DEPLOYMENT ? '' : '/blog',
 
   integrations: [
-    sitemap(),
     tailwind({
       applyBaseStyles: false, // We'll define our own base styles
     }),

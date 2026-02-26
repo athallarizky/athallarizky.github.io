@@ -2,9 +2,12 @@
 import { getCollection } from 'astro:content';
 import BlogPost from '../../layouts/BlogPost.astro';
 
-export function getStaticPaths() {
-  const posts = getCollection('blog', ({ data }) => !data.draft);
-  return posts;
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
 }
 
 const { post } = Astro.props;
