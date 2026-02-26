@@ -1,0 +1,63 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  image: string;
+  pageType: 'website' | 'article';
+  canonicalUrl: URL;
+}
+
+const { title, description, image, pageType, canonicalUrl } = Astro.props;
+
+const siteName = 'Athallari Zky | Tech Blog';
+const fullTitle = title === siteName ? siteName : `${title} | ${siteName}`;
+
+// Open Graph
+const ogType = pageType === 'article' ? 'article' : 'website';
+const ogImage = new URL(image, canonicalUrl).href;
+
+// Twitter Card
+const twitterCard = image.includes('twitter:') ? 'summary_large_image' : 'summary';
+---
+
+<!-- Primary Meta Tags -->
+<title>{fullTitle}</title>
+<meta name="title" content={fullTitle} />
+<meta name="description" content={description} />
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content={ogType} />
+<meta property="og:url" content={canonicalUrl} />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={ogImage} />
+
+<!-- Twitter -->
+<meta name="twitter:card" content={twitterCard} />
+<meta property="twitter:url" content={canonicalUrl} />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />
+
+<!-- Additional SEO -->
+<meta name="author" content="Athallari Zky" />
+<link rel="author" href="https://github.com/athallarizky" />
+
+<!-- Structured Data -->
+{pageType === 'article' && (
+  <script type="application/ld+json">
+    {{
+      '@context': 'https://schema.org',
+      '@type': 'BlogPosting',
+      headline: title,
+      description: description,
+      image: ogImage,
+      url: canonicalUrl,
+      author: {
+        '@type': 'Person',
+        name: 'Athallari Zky',
+        url: 'https://github.com/athallarizky',
+      },
+    }}
+  </script>
+)}

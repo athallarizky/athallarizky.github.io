@@ -1,0 +1,33 @@
+{
+  "name": "athallarizky-blog",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Production-ready Astro tech blog for GitHub Pages",
+  "author": "Athallari Zky",
+  "license": "MIT",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "format": "prettier -w .",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@astrojs/rss": "^4.0.11",
+    "@astrojs/sitemap": "^3.2.1",
+    "@astrojs/tailwind": "^6.0.0",
+    "astro": "^4.16.17",
+    "tailwindcss": "^3.4.17"
+  },
+  "devDependencies": {
+    "@tailwindcss/typography": "^0.5.15",
+    "prettier": "^3.4.2",
+    "prettier-plugin-astro": "^0.14.1",
+    "remark-gfm": "^4.0.0",
+    "typescript": "^5.7.3"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

@@ -1,0 +1,90 @@
+---
+import '../styles/global.css';
+import SEO from '../components/SEO.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import ThemeToggle from '../components/ThemeToggle.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  pageType?: 'website' | 'article';
+}
+
+const {
+  title = 'Athallari Zky | Tech Blog',
+  description = 'A modern tech blog covering software engineering, DevOps, and web development.',
+  image = '/og-default.jpg',
+  pageType = 'website',
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="canonical" href={canonicalURL} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate" type="application/rss+xml" title={title} href={`${Astro.site}rss.xml`} />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- Preconnect for fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <SEO
+      {title}
+      {description}
+      {image}
+      pageType={pageType}
+      canonicalUrl={canonicalURL}
+    />
+
+    <!-- Inline critical CSS for theme flash prevention -->
+    <script is:inline>
+      (function() {
+        const theme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
+  </head>
+
+  <body>
+    <div class="page-wrapper">
+      <Header />
+      <main id="main-content" class="main-content">
+        <slot />
+      </main>
+      <Footer />
+    </div>
+
+    <!-- Theme toggle script -->
+    <ThemeToggle />
+  </body>
+</html>
+
+<style>
+  .page-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  .main-content {
+    flex: 1;
+    padding-top: var(--header-height);
+  }
+
+  /* Prevent layout shift */
+  body {
+    min-height: 100vh;
+  }
+</style>

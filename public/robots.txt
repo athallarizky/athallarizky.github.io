@@ -1,0 +1,7 @@
+# robots.txt for GitHub Pages deployment
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://athallarizky.github.io/sitemap-index.xml

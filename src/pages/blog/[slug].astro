@@ -1,0 +1,13 @@
+---
+import { getCollection } from 'astro:content';
+import BlogPost from '../../layouts/BlogPost.astro';
+
+export function getStaticPaths() {
+  const posts = getCollection('blog', ({ data }) => !data.draft);
+  return posts;
+}
+
+const { post } = Astro.props;
+---
+
+<BlogPost post={post} />

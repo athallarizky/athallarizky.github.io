@@ -1,0 +1,191 @@
+---
+/**
+ * Enhanced Code Block Component
+ * - Syntax highlighting via Shiki (configured in astro.config)
+ * - Copy-to-clipboard functionality
+ * - Language label display
+ */
+
+interface Props {
+  class?: string;
+  [key: string]: any;
+}
+
+const { class: className = '', ...props } = Astro.props;
+
+// Extract language from class name (e.g., "language-ts" -> "ts")
+const langMatch = className.match(/language-(\w+)/);
+const language = langMatch ? langMatch[1] : 'text';
+---
+
+<div class="code-block-wrapper" data-language={language}>
+  <div class="code-header">
+    <span class="code-language">{language}</span>
+    <button
+      type="button"
+      class="copy-button"
+      aria-label="Copy code to clipboard"
+      title="Copy to clipboard"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="copy-icon"
+        aria-hidden="true"
+      >
+        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+      </svg>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="check-icon"
+        aria-hidden="true"
+      >
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+      <span class="copy-text">Copy</span>
+    </button>
+  </div>
+  <pre class={className} {...props}><slot /></pre>
+</div>
+
+<script>
+  // Add copy functionality to all code blocks
+  document.querySelectorAll('.code-block-wrapper').forEach((wrapper) => {
+    const button = wrapper.querySelector('.copy-button');
+    const pre = wrapper.querySelector('pre');
+    if (!button || !pre) return;
+
+    button.addEventListener('click', async () => {
+      const code = pre.textContent ?? '';
+      const buttonText = button.querySelector('.copy-text');
+
+      try {
+        await navigator.clipboard.writeText(code);
+        button.classList.add('copied');
+        if (buttonText) {
+          buttonText.textContent = 'Copied!';
+        }
+
+        // Reset after 2 seconds
+        setTimeout(() => {
+          button.classList.remove('copied');
+          if (buttonText) {
+            buttonText.textContent = 'Copy';
+          }
+        }, 2000);
+      } catch (err) {
+        console.error('Failed to copy code:', err);
+        button.classList.add('error');
+        if (buttonText) {
+          buttonText.textContent = 'Failed';
+        }
+      }
+    });
+  });
+</script>
+
+<style>
+  .code-block-wrapper {
+    position: relative;
+    margin: 2rem 0;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: var(--color-code-bg);
+    border: 1px solid var(--color-border);
+  }
+
+  .code-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 1rem;
+    background-color: var(--color-bg-secondary);
+    border-bottom: 1px solid var(--color-border);
+    font-size: 0.75rem;
+  }
+
+  .code-language {
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    font-size: 0.6875rem;
+    letter-spacing: 0.05em;
+  }
+
+  .copy-button {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.25rem 0.625rem;
+    background-color: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    color: var(--color-text-muted);
+    font-size: 0.6875rem;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .copy-button:hover {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    border-color: var(--color-accent);
+  }
+
+  .copy-button.copied {
+    color: #22c55e;
+    border-color: #22c55e;
+  }
+
+  .copy-button.error {
+    color: #ef4444;
+    border-color: #ef4444;
+  }
+
+  .copy-icon,
+  .check-icon {
+    width: 14px;
+    height: 14px;
+  }
+
+  .check-icon {
+    display: none;
+  }
+
+  .copy-button.copied .copy-icon {
+    display: none;
+  }
+
+  .copy-button.copied .check-icon {
+    display: block;
+  }
+
+  .code-block-wrapper pre {
+    margin: 0;
+    border: none;
+    border-radius: 0;
+  }
+
+  .code-block-wrapper code {
+    background-color: transparent;
+    padding: 1rem;
+  }
+</style>

@@ -1,0 +1,88 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="About | Athallari Zky" description="About me and my tech blog">
+  <div class="container about-page">
+    <h1>About</h1>
+
+    <div class="content">
+      <p>
+        Hi, I'm <strong>Athallari Zky</strong> — a frontend architect and DevOps engineer
+        passionate about building scalable web applications and robust infrastructure.
+      </p>
+
+      <p>
+        This blog is where I share my thoughts and experiences on software engineering,
+        modern web development, cloud infrastructure, and the tools I use daily.
+      </p>
+
+      <h2>Tech Stack</h2>
+      <p>
+        My primary focus is on the JavaScript/TypeScript ecosystem, with particular
+        expertise in:
+      </p>
+      <ul>
+        <li><strong>Frontend:</strong> React, Astro, Next.js, TypeScript</li>
+        <li><strong>Styling:</strong> Tailwind CSS, CSS-in-JS</li>
+        <li><strong>Backend:</strong> Node.js, serverless functions</li>
+        <li><strong>DevOps:</strong> Docker, GitHub Actions, AWS, Terraform</li>
+        <li><strong>Databases:</strong> PostgreSQL, Redis, MongoDB</li>
+      </ul>
+
+      <h2>Connect</h2>
+      <p>
+        Feel free to reach out if you'd like to collaborate or just have a chat about
+        technology:
+      </p>
+      <ul>
+        <li>
+          <a href="https://github.com/athallarizky" target="_blank" rel="noopener noreferrer"
+            >GitHub</a
+          >
+        </li>
+        <li>
+          <a
+            href="https://linkedin.com/in/athallarizky"
+            target="_blank"
+            rel="noopener noreferrer"
+            >LinkedIn</a
+          >
+        </li>
+        <li>
+          <a href="https://twitter.com/athallarizky" target="_blank" rel="noopener noreferrer"
+            >Twitter/X</a
+          >
+        </li>
+      </ul>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .about-page {
+    padding: 3rem 1rem 4rem;
+  }
+
+  .about-page h1 {
+    margin-bottom: 2rem;
+  }
+
+  .content {
+    max-width: 65ch;
+  }
+
+  .content h2 {
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .content ul {
+    margin-left: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .content li {
+    margin-bottom: 0.5rem;
+  }
+</style>

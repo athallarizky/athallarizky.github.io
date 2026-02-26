@@ -1,0 +1,294 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+// Get all published blog posts
+const allPosts = await getCollection('blog', ({ data }) => !data.draft);
+
+// Sort by date (newest first)
+const posts = allPosts.sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+// Featured posts first
+const featuredPosts = posts.filter((post) => post.data.featured);
+const regularPosts = posts.filter((post) => !post.data.featured);
+
+// Get unique categories and tags
+const categories = [...new Set(posts.map((post) => post.data.category))];
+const allTags = posts.flatMap((post) => post.data.tags);
+const tags = [...new Set(allTags)];
+---
+
+<BaseLayout>
+  <div class="container">
+    <header class="hero">
+      <h1>Athallari Zky</h1>
+      <p class="subtitle">
+        Frontend architect & DevOps engineer. Writing about software engineering, web
+        development, and infrastructure.
+      </p>
+      <div class="hero-meta">
+        <span class="stat">{posts.length} posts</span>
+        <span class="stat">{categories.length} categories</span>
+        <span class="stat">{tags.length} tags</span>
+      </div>
+    </header>
+
+    {featuredPosts.length > 0 && (
+      <section class="section">
+        <h2 class="section-title">Featured</h2>
+        <div class="posts-grid">
+          {featuredPosts.map((post) => (
+            <a href={`/blog/${post.slug}/`} class="post-card featured">
+              <span class="featured-badge">Featured</span>
+              <h3 class="post-title">{post.data.title}</h3>
+              <p class="post-description">{post.data.description}</p>
+              <div class="post-meta">
+                <time datetime={post.data.pubDate.toISOString()} class="post-date">
+                  {post.data.pubDate.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                  })}
+                </time>
+                <span class="post-category">{post.data.category}</span>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+
+    {regularPosts.length > 0 && (
+      <section class="section">
+        <h2 class="section-title">Latest Posts</h2>
+        <div class="posts-list">
+          {regularPosts.map((post) => (
+            <a href={`/blog/${post.slug}/`} class="post-item">
+              <article>
+                <h3 class="post-title">{post.data.title}</h3>
+                <p class="post-description">{post.data.description}</p>
+                <div class="post-meta">
+                  <time datetime={post.data.pubDate.toISOString()} class="post-date">
+                    {post.data.pubDate.toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric',
+                    })}
+                  </time>
+                  <span class="post-category">{post.data.category}</span>
+                  {post.data.tags.length > 0 && (
+                    <div class="post-tags">
+                      {post.data.tags.slice(0, 3).map((tag) => (
+                        <span class="tag">#{tag}</span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </article>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <section class="section tags-section">
+      <h2 class="section-title">Topics</h2>
+      <div class="tags-cloud">
+        {tags.map((tag) => (
+          <a href={`/tags/${tag}/`} class="tag-link">
+            #{tag}
+          </a>
+        ))}
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .hero {
+    padding: 4rem 0;
+    text-align: center;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.5rem, 8vw, 4rem);
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, var(--color-text) 0%, var(--color-text-muted) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtitle {
+    font-size: 1.125rem;
+    color: var(--color-text-muted);
+    max-width: 500px;
+    margin: 0 auto 1.5rem;
+  }
+
+  .hero-meta {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+  }
+
+  .stat {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .section {
+    padding: 3rem 0;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Featured Grid */
+  .posts-grid {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .post-card {
+    position: relative;
+    display: block;
+    padding: 1.5rem;
+    background-color: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    transition: all 0.2s ease;
+  }
+
+  .post-card:hover {
+    border-color: var(--color-accent);
+    transform: translateY(-2px);
+  }
+
+  .post-card.featured {
+    border-color: var(--color-accent);
+  }
+
+  .featured-badge {
+    position: absolute;
+    top: -0.5rem;
+    right: 1rem;
+    background: linear-gradient(135deg, var(--color-accent) 0%, #818cf8 100%);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  /* Posts List */
+  .posts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .post-item {
+    display: block;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid var(--color-border);
+    transition: color 0.15s ease;
+  }
+
+  .post-item:last-child {
+    border-bottom: none;
+  }
+
+  .post-item:hover .post-title {
+    color: var(--color-accent);
+  }
+
+  .post-title {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+    transition: color 0.15s ease;
+  }
+
+  .post-description {
+    color: var(--color-text-muted);
+    margin-bottom: 0.75rem;
+  }
+
+  .post-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.8125rem;
+  }
+
+  .post-date {
+    color: var(--color-text-muted);
+  }
+
+  .post-category {
+    background-color: var(--color-code-bg);
+    color: var(--color-text-muted);
+    padding: 0.125rem 0.5rem;
+    border-radius: 4px;
+  }
+
+  .post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+  }
+
+  .tag {
+    color: var(--color-text-muted);
+    font-size: 0.75rem;
+  }
+
+  /* Tags Cloud */
+  .tags-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .tag-link {
+    padding: 0.375rem 0.75rem;
+    background-color: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    transition: all 0.15s ease;
+  }
+
+  .tag-link:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+
+  @media (max-width: 640px) {
+    .hero {
+      padding: 2rem 0;
+    }
+
+    .hero-meta {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .post-card {
+      padding: 1rem;
+    }
+
+    .post-item {
+      padding: 1rem 0;
+    }
+  }
+</style>
