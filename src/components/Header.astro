@@ -9,23 +9,25 @@ const navItems = [
 <header class="header">
   <div class="container header-inner">
     <a href="/" class="logo">
-      <span class="logo-text">AZ.</span>
+      <span class="logo-text">Athallari Zky</span>
     </a>
 
     <nav class="nav" aria-label="Main navigation">
       <ul class="nav-list" role="list">
-        {navItems.map((item) => (
-          <li>
-            <a
-              href={item.href}
-              class:nav-link={!item.external}
-              class:external-link={item.external}
-              {...(item.external && { target: '_blank', rel: 'noopener noreferrer' })}
-            >
-              {item.label}
-            </a>
-          </li>
-        ))}
+        {
+          navItems.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                class:nav-link={!item.external}
+                class:external-link={item.external}
+                {...(item.external && { target: '_blank', rel: 'noopener noreferrer' })}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
       </ul>
     </nav>
   </div>
@@ -33,23 +35,16 @@ const navItems = [
 
 <style>
   .header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
     height: var(--header-height);
-    background-color: color-mix(in srgb, var(--color-bg) 90%, transparent);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--color-border);
-    z-index: 100;
+    display: flex;
+    align-items: center;
   }
 
   .header-inner {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 100%;
+    width: 100%;
   }
 
   .logo {
@@ -61,10 +56,12 @@ const navItems = [
   }
 
   .logo-text {
-    background: linear-gradient(135deg, var(--color-accent) 0%, #818cf8 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--color-text);
+    transition: color 0.2s ease;
+  }
+
+  .logo:hover .logo-text {
+    color: var(--color-text-muted);
   }
 
   .nav-list {
@@ -80,12 +77,13 @@ const navItems = [
     font-size: 0.875rem;
     font-weight: 500;
     color: var(--color-text-muted);
+    text-decoration: none;
     transition: color 0.15s ease;
   }
 
   .nav-link:hover,
   .external-link:hover {
-    color: var(--color-accent);
+    color: var(--color-text);
   }
 
   .external-link::after {
